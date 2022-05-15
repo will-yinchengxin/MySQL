@@ -1,0 +1,25 @@
+CREATE TABLE `developer_document` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `rank` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `parent_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '父级id',
+  `doc_title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+  `doc_content` text COMMENT '内容',
+  `doc_pure_content` text COMMENT '纯文本',
+  `doc_link` varchar(1024) NOT NULL DEFAULT '' COMMENT 'doc存储地址',
+  `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '1. 未删除 2删除',
+  `doc_status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT 'doc状态 1.未发布 2发布',
+  `doc_level` bigint(20) NOT NULL DEFAULT '0' COMMENT '文档等级',
+  `doc_number` varchar(45) NOT NULL DEFAULT '' COMMENT '文档编号',
+  `creator_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '创建者',
+  `updater_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '更新者',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uniq_doc_number` (`doc_number`),
+  KEY `idx_parent` (`parent_id`),
+  FULLTEXT KEY `idx_doc_title` (`doc_title`),
+  FULLTEXT KEY `idx_doc_content` (`doc_content`)
+) ENGINE=InnoDB AUTO_INCREMENT=476 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='开发者文档表'
+
+# 在使用 GROUP_CONCAT 进行 新字符串的组装的时候，如果没有 group by 选线，查询结果会连续在一起，此时需要一个分割符，也就是 separator(气候跟 分隔符)
+SELECT id, GROUP_CONCAT(doc_title, "<=>",doc_content separator ";" ) as keywords FROM `developer_document` where doc_status = 2 GROUP BY parent_id

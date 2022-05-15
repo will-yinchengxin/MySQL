@@ -1,0 +1,37 @@
+create user 'liu'@'%' identified by 'liu123';
+
+# mysql 8.0一下版本可以支持这种写法
+grant SELECT, REPLICATION SLAVE, REPLICATION CLIENT on *.* TO 'liu'@'%' identified by 'liu123';
+# mysql8.0中已经不支持这种写法了，赋予权限必须分开，先创建用户、再给用户赋值
+# GRANT SELECT,UPDATE,DELETE,INSERT ON test.* TO 'liu'@'%'
+GRANT SELECT ON *.* TO 'liu'@'%'
+
+SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS info FROM mysql.user;
+
+select * from mysql.user
+
+# 删除用户
+delete from mysql.user where User = "liu"
+
+
+# 格式化时间戳
+SELECT *, FROM_UNIXTIME(create_time) FROM `firmware_difference` # 格式化时间戳
+
+
+# group by 新增判断写法
+SELECT
+	MAX( `CreateTime` )
+FROM
+	`wp_weixin_message`
+WHERE
+	( `FromUserName` = 'sssssss' OR `ToUserName` = 'sssssss' )
+GROUP BY
+	CONCAT(
+	IF
+		( `FromUserName` = 'sssssss', `FromUserName`, `ToUserName` ),
+	IF
+	( `ToUserName` = 'sssssss', `FromUserName`, `ToUserName` ))
+
+
+# 字符串 order 排序问题
+SELECT * FROM `firmware_whole` where equipment_id = 100 ORDER BY format_version+0 desc # 对一个纯真 varchar 类型的字段进行排序的时候,添加一个四则运算在进行 order 排序

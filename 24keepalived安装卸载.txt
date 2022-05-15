@@ -1,0 +1,47 @@
+二. Keepalived工具安装
+    2.1 安装 keepalived 需要用到 openssl
+
+    方式一 yum安装:
+    [root@localhost ~]# yum install -y curl gcc openssl-devel libnl3-devel net-snmp-devel
+    [root@localhost ~]# yum install epel-release -y
+    [root@localhost keepalived]#yum install keepalived -y  #通过yum直接安装
+    初始化及启动
+    [root@localhost ~]# systemctl start keepalived   //启动 keepalived
+    [root@localhost ~]# systemctl stop keepalived   //关闭 keepalived
+    [root@localhost ~]# systemctl enable keepalived  //加入开机启动 keepalived
+    [root@localhost ~]# systemctl restart keepalived  //重新启动 keepalived
+    [root@localhost ~]# systemctl status keepalived   //查看 keepalived 状态
+
+    快速卸载
+    [root@localhost ~]# rpm -e keepalived
+
+    配置文件路径为/etc/keepalived/keepalived.conf
+
+
+    方式二 源码包安装:
+    [root@localhost keepalived]# yum install gcc gcc-c++ openssl openssl-devel
+    [root@localhost home]# wget -q https://www.keepalived.org/software/keepalived-1.2.18.tar.gz
+
+    解压Keepalived并安装
+    [root@localhost home]# tar -zxvf keepalived-1.2.18.tar.gz
+    [root@localhost home]# cd keepalived-1.2.18
+    [root@localhost keepalived-1.2.18]# ./configure --prefix=/usr/local/keepalived
+    [root@localhost keepalived-1.2.18]# make && make install
+
+    将 keepalived 安装成 Linux 系统服务(因为没有使用 keepalived 的默认路径安装（我们使用的是/usr/local） ,安装完成之后，
+    需要做一些工作 复制默认配置文件到默认路径)
+    [root@localhost keepalived-1.2.18]# mkdir /etc/keepalived
+    [root@localhost keepalived-1.2.18]# cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/
+
+    复制 keepalived 服务脚本到默认的地址
+    [root@localhost keepalived-1.2.18]# cp /usr/local/keepalived/etc/rc.d/init.d/keepalived  /etc/init.d/
+    [root@localhost keepalived-1.2.18]# cp /usr/local/keepalived/etc/sysconfig/keepalived  /etc/sysconfig/
+    [root@localhost keepalived-1.2.18]# ln -s /usr/local/keepalived/sbin/keepalived  /usr/sbin/
+
+    设置 keepalived 服务开机启动
+    [root@localhost keepalived-1.2.18]# chkconfig keepalived on
+
+    此时的开关机命令
+    [root@localhost etc]# service strat keepalived
+    [root@localhost etc]# service stop keepalived
+    [root@localhost etc]# service restrat keepalived

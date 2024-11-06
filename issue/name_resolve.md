@@ -5,10 +5,14 @@
 ````
 检查一下变量状态
 ```sql
-show VARIABLES like "skip_name_resolve"
-
-Variable_name      Value
-skip_name_resolve	 OFF
+mysql> show VARIABLES like "skip_name_resolve"
+    -> ;
++-------------------+-------+
+| Variable_name     | Value |
++-------------------+-------+
+| skip_name_resolve | OFF    |
++-------------------+-------+
+1 row in set (0.01 sec)
 ````
 
 skip_name_resolve 是 MySQL 中的一个配置参数，其主要作用是控制 MySQL 服务器是否对客户端连接请求中的主机名进行 DNS 解析。具体来说，当这个参数被设置时，MySQL 服务器将不再尝试解析客户端的主机名，而是直接使用 IP 地址进行连接验证和处理
